@@ -54,10 +54,10 @@ def load_bmw_models_dict():
 
 
 # re-sizing images
-def load_and_process_image(img_path, image_size=255.0):
+def load_and_process_image(img_path, image_size=255):
     img = mpimg.imread(img_path)
     img = img.astype("float32")
-    img /= image_size
+    img /= float(image_size)
 
     img = cv2.cv2.resize(img, (image_size, image_size))
     return img
@@ -100,10 +100,9 @@ def load_labels():
 def hot_encode_labels(train_labels, test_labels):
 
         if np.array_equal(set(train_labels), set(test_labels)):
-            print("\n Number and values of train and test labels/classes are exactly equal, We good!!! \n")
+            print("\n train and test labels/classes are exactly equal, We good!!! \n")
         else:
-            print("\n Discrepancies between train and test labels/classes \n")
-            exit()
+            print("\nDiscrepancies between train and test labels/classes, program halted !!!!! \n")
 
         le = preprocessing.LabelEncoder()
 
