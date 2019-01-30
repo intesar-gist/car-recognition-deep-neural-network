@@ -54,13 +54,32 @@ def load_bmw_models_dict():
 
 
 # re-sizing images
-def load_and_process_image(img_path, image_size=255):
+def resize_image_nopad(img_path, image_size=255):
     img = mpimg.imread(img_path)
     img = img.astype("float32")
     img /= float(image_size)
 
     img = cv2.cv2.resize(img, (image_size, image_size))
     return img
+
+
+def resize_image_pad(img_path, image_size=244):
+    im = mpimg.imread(img_path)
+    desired_size = image_size
+
+    old_size = im.shape[:2]  # old_size is in (height, width) format
+    ratio = float(desired_size) / max(old_size)
+    new_size = tuple([int(x * ratio) for x in old_size])
+    # new_size should be in (width, height) format
+    im = cv2.resize(im, (new_size[1], new_size[0]))
+    delta_w = desired_size - new_size[1]
+    delta_h = desired_size - new_size[0]
+    top, bottom = delta_h // 2, delta_h - (delta_h // 2)
+    left, right = delta_w // 2, delta_w - (delta_w // 2)
+    color = [0, 0, 0]
+    new_im = cv2.copyMakeBorder(im, top, bottom, left, right, cv2.BORDER_CONSTANT,
+                                value=color)
+    return new_im
 
 
 # returns numpy array of images and corresponding labels
@@ -79,7 +98,7 @@ def load_bmw_data(file_name):
 
         # load images from given path
         img_path = os.path.join(dir_images, img_path_data.rstrip("\n\r"))
-        img_matrix.append(load_and_process_image(img_path))
+        img_matrix.append(resize_image_pad(img_path))
 
     f.close()
 
