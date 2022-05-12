@@ -1,1 +1,1 @@
-# car-recognitaion-deep-neural-network
+# car-recognition-deep-neural-network
